@@ -39,12 +39,12 @@ function LoginPage() {
           });
           
           const token = response.data.token;
-          const id = response.data.id;
+          const username = response.data.username;
           // Store token securely (e.g., localStorage)
           localStorage.setItem('token', token);
-          localStorage.setItem('id', id);
+          localStorage.setItem('username', username);
           console.log('Login successful');
-          navigate('/dashboard')
+          navigate('/dashboard');
         } catch (error) {
           console.error('Login failed', error);
         }

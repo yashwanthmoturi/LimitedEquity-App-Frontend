@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
 import axios from 'axios';
 import LoginPage from '../Pages/LoginPage';
+import {useNavigate} from "react-router-dom"
+
 function PrivateRoute({ element }) {
     const [authenticated, setAuthenticated] = useState(false);
-
+    const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
     useEffect(() => {
         const checkAuthentication = async () => {
             try {
@@ -16,41 +18,34 @@ function PrivateRoute({ element }) {
         };
 
         checkAuthentication();
-
+    // eslint-disable-next-line
     }, []);
 
     // Function to validate token (you can implement your own logic)
     const tokenIsValid = async() => {
         try {
-            // axios.get('http://localhost:8080/test').then((data)=> {
-            //     console.log(data);
-            // })
           const response = await axios.post('http://localhost:8080/validate-token', {
-            id: localStorage.getItem('id'),
+            username: localStorage.getItem('username'),
             token: localStorage.getItem('token')
           });
           console.log(response.status);
+          setLoading(false);
           if(response.status === 200) {
             return true;
           }
           else {
+            navigate('/');
             return false;
           }
-
-          
-        //   const token = response.data.token;
-        //   const id = response.data.id;
-        //   // Store token securely (e.g., localStorage)
-        //   localStorage.setItem('token', token);
-        //   localStorage.setItem('id', id);
-        //   console.log('Login successful');
-        //   navigate('/dashboard')
         } catch (error) {
+          navigate('/');
+
+          setLoading(false);
           return false;
         }
     };
 
-    return authenticated ? element : <LoginPage/>;
+    return authenticated ? element : (loading ? (<></>) : <LoginPage/>);
 }
 
 export default PrivateRoute;
