@@ -1,1 +1,1 @@
-# LimitedEquity Frontend
+# LimitedEquity FRONTEND
